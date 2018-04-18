@@ -1,10 +1,14 @@
 # Lab 7 Learning rate and Evaluation
+from __future__ import print_function
+
 import tensorflow as tf
 import random
 import numpy as np
 
 # import matplotlib.pyplot as plt
 from tensorflow.examples.tutorials.mnist import input_data
+import sys
+
 tf.set_random_seed(777)  # reproducibility
 
 # mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
@@ -44,7 +48,7 @@ y_data2 = np.zeros((xy2.shape[0], 5))
 y_data2[np.arange(xy2.shape[0]), y_raw] = 1
 # parameters
 learning_rate = 0.01
-training_epochs = 5000
+training_epochs = 10
 num_examples = xy.shape[0]
 batch_size = 100
 
@@ -107,7 +111,7 @@ accuracy_summ = tf.summary.scalar("accuracy", accuracy)
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 merged_summary = tf.summary.merge_all()
-writer = tf.summary.FileWriter("./logs")
+writer = tf.summary.FileWriter("./logs/single")
 writer.add_graph(sess.graph)  # Show the graph
 # train my model
 global_step=0
@@ -135,11 +139,33 @@ correct_prediction = tf.equal(tf.argmax(hypothesis, 1), tf.argmax(Y, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 print('Accuracy:', sess.run(accuracy, feed_dict={X: x_data2, Y: y_data2, keep_prob: 0.7}))
 
-# # Get one and predict
-# r = random.randint(0, mnist.test.num_examples - 1)
-# print("Label: ", sess.run(tf.argmax(mnist.test.labels[r:r + 1], 1)))
-# print("Prediction: ", sess.run(
-#     tf.argmax(hypothesis, 1), feed_dict={X: mnist.test.images[r:r + 1]}))
+
+# make confusion matrix
+orig_stdout = sys.stdout
+f = open('out.txt', 'w')
+sys.stdout = f
+
+print("label    prediction")
+array = [[0, 0, 0, 0, 0],  # when input was A, prediction was A for 9 times, B for 1 time
+         [0, 0, 0, 0, 0], # when input was B, prediction was A for 1 time, B for 15 times, C for 3 times
+         [0, 0, 0, 0, 0], # when input was C, prediction was A for 5 times, C for 24 times, D for 1 time
+         [0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0]]
+
+for r in range(xy2.shape[0]):    # r = random.randint(0, xy2.shape[0] - 1)
+    l = sess.run(tf.argmax(y_data2[r:r+1], 1))
+    p = sess.run(
+        tf.argmax(hypothesis, 1), feed_dict={X: x_data2[r:r + 1]})
+    array[l[0]][p[0]]+=1
+    print(l, p)
+
+for i in range(5):
+    for j in range(5):
+        print (array[i][j], end=',')
+    print("")
+
+sys.stdout = orig_stdout
+f.close()
 
 # plt.imshow(mnist.test.images[r:r + 1].
 #           reshape(28, 28), cmap='Greys', interpolation='nearest')

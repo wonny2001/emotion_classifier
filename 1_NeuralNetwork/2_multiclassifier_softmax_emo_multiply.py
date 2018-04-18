@@ -13,7 +13,7 @@ SORT_OF_EMO = 6
 SORT_OF_APPTYPE = 5
 # OUTMODE = 'show'
 OUTMODE = 'none'
-OUT_FILE_NUM = 0
+OUT_FILE_NUM = 10
 
 class NODE:
 
@@ -204,7 +204,7 @@ y_data[np.arange(xy.shape[0]), y_raw] = 1
 
 print('num of parameter : ', xy.shape[1]-1)
 
-xy2 = np.loadtxt('/home/rainman/git/emotionClassifer/emotion_classifier/2_MakeRandomCSV/out/20171121_test.csv', delimiter=',', dtype=np.float32)
+xy2 = np.loadtxt('/home/rainman/git/emotionClassifer/emotion_classifier/2_MakeRandomCSV/out/20171121_train.csv', delimiter=',', dtype=np.float32)
 
 x_data2 = xy2[:, 0:-1]
 
@@ -240,7 +240,7 @@ y_data2 = np.zeros((xy2.shape[0], SORT_OF_APPTYPE))
 y_data2[np.arange(xy2.shape[0]), y_raw] = 1
 # parameters
 learning_rate = 0.01
-training_epochs = 100
+training_epochs = 5000
 num_examples = xy.shape[0]
 batch_size = 100
 
