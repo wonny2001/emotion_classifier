@@ -1,4 +1,7 @@
 # Lab 7 Learning rate and Evaluation
+from __future__ import print_function
+from datetime import timedelta
+
 import tensorflow as tf
 import math
 import random
@@ -7,6 +10,7 @@ import matplotlib.pyplot as plt
 
 import os
 import errno
+import sys
 from mpl_toolkits.mplot3d import Axes3D
 PLOT_DIR = './out'
 SORT_OF_EMO = 6
@@ -150,10 +154,9 @@ def show4dScatter(x_2dim, h):
 
 
 tf.set_random_seed(777)  # reproducibility
-xy = np.loadtxt('/home/rainman/git/emotionClassifer/emotion_classifier/2_MakeRandomCSV/out/20171121_train.csv', delimiter=',', dtype=np.float32)
+xy = np.loadtxt('/home/rainman/git/emotionClassifer/emotion_classifier/2_MakeRandomCSV/out/train0611_40s.csv', delimiter=',', dtype=np.float32)
 x_data = xy[:, 0:-1]
 x_2dim = []
-
 
 for i in range(len(x_data[1])) :
     for j in range(len(x_data[1])):
@@ -177,17 +180,7 @@ for h in range(xy.shape[0]):
             for k in range(len(x_data[1])):
                 if (x_data[h][k] < 0.01):
                     x_data[h][k] = 0
-                # for m in range(len(x_data[1])):
-                #     if (x_data[h][m] < 0.01):
-                #         x_data[h][m] = 0
                 x_2dim[h].append(x_data[h][i]*x_data[h][j]*x_data[h][k])
-
-                #for test
-    # if(h < 100) :
-    #     x_2dim_2d = np.reshape(x_2dim[h], (SORT_OF_EMO, SORT_OF_EMO))
-    #     show3dGraph(x_2dim_2d, h)
-
-                # x_2dim_2d = np.reshape(x_2dim[h], (SORT_OF_EMO, SORT_OF_EMO, SORT_OF_EMO))
 
     if (h < OUT_FILE_NUM):
         setNodeValues(x_2dim, h)
@@ -204,7 +197,7 @@ y_data[np.arange(xy.shape[0]), y_raw] = 1
 
 print('num of parameter : ', xy.shape[1]-1)
 
-xy2 = np.loadtxt('/home/rainman/git/emotionClassifer/emotion_classifier/2_MakeRandomCSV/out/20171121_train.csv', delimiter=',', dtype=np.float32)
+xy2 = np.loadtxt('/home/rainman/git/emotionClassifer/emotion_classifier/2_MakeRandomCSV/out/test0611_40s.csv', delimiter=',', dtype=np.float32)
 
 x_data2 = xy2[:, 0:-1]
 
@@ -238,9 +231,10 @@ y_raw = np.int_(y_raw)
 # for one_hot code,
 y_data2 = np.zeros((xy2.shape[0], SORT_OF_APPTYPE))
 y_data2[np.arange(xy2.shape[0]), y_raw] = 1
+
 # parameters
 learning_rate = 0.01
-training_epochs = 5000
+training_epochs = 100
 num_examples = xy.shape[0]
 batch_size = 100
 
@@ -248,8 +242,8 @@ WH = xy.shape[1]-1
 INPUTSIZE =WH*WH*WH
 
 # input place holders
-X = tf.placeholder(tf.float32, [None, INPUTSIZE])
-Y = tf.placeholder(tf.float32, [None, SORT_OF_APPTYPE])
+X = tf.placeholder(tf.float32, [None, INPUTSIZE],  name='X')
+Y = tf.placeholder(tf.float32, [None, SORT_OF_APPTYPE],  name='Y')
 
 keep_prob = tf.placeholder(tf.float32)
 W1 = tf.get_variable("W1", shape=[INPUTSIZE, INPUTSIZE*8],
@@ -319,6 +313,95 @@ print('Learning Finished!')
 correct_prediction = tf.equal(tf.argmax(hypothesis, 1), tf.argmax(Y, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 print('Accuracy:', sess.run(accuracy, feed_dict={X: x_2dim2, Y: y_data2, keep_prob: 0.7}))
+
+# make confusion matrix
+d = timedelta(microseconds=-1)
+
+orig_stdout = sys.stdout
+ofilename = 'out_mul'+str(d.days) +str(d.seconds) +'.txt'
+f = open( ofilename, 'w')
+sys.stdout = f
+
+print("label    prediction")
+
+#test
+array = [[0, 0, 0, 0, 0],  # when input was A, prediction was A for 9 times, B for 1 time
+         [0, 0, 0, 0, 0], # when input was B, prediction was A for 1 time, B for 15 times, C for 3 times
+         [0, 0, 0, 0, 0], # when input was C, prediction was A for 5 times, C for 24 times, D for 1 time
+         [0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0]]
+
+
+data_np = np.asarray(x_2dim2, np.float32)
+
+for r in range(xy2.shape[0]):    # r = random.randint(0, xy2.shape[0] - 1)
+    l = sess.run(tf.argmax(y_data2[r:r+1], 1))
+
+    # p_tf = tf.convert_to_tensor(x_2dim2, np.float32)
+    p = sess.run(
+        tf.argmax(hypothesis, 1), feed_dict={X: data_np[r:r+1],  keep_prob: 0.7} )
+    array[l[0]][p[0]]+=1
+    print(l, p)
+
+for i in range(5):
+    for j in range(5):
+        print (array[i][j], end=',')
+    print("")
+
+
+#training
+array = [[0, 0, 0, 0, 0],  # when input was A, prediction was A for 9 times, B for 1 time
+         [0, 0, 0, 0, 0], # when input was B, prediction was A for 1 time, B for 15 times, C for 3 times
+         [0, 0, 0, 0, 0], # when input was C, prediction was A for 5 times, C for 24 times, D for 1 time
+         [0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0]]
+data_np = np.asarray(x_2dim, np.float32)
+
+for r in range(xy.shape[0]):    # r = random.randint(0, xy2.shape[0] - 1)
+    l = sess.run(tf.argmax(y_data[r:r+1], 1))
+
+    # p_tf = tf.convert_to_tensor(x_2dim2, np.float32)
+    p = sess.run(
+        tf.argmax(hypothesis, 1), feed_dict={X: data_np[r:r+1],  keep_prob: 0.7} )
+    array[l[0]][p[0]]+=1
+    print(l, p)
+
+for i in range(5):
+    for j in range(5):
+        print (array[i][j], end=',')
+    print("")
+
+# validation
+array = [[0, 0, 0, 0, 0],  # when input was A, prediction was A for 9 times, B for 1 time <
+         [0, 0, 0, 0, 0],  # when input was B, prediction was A for 1 time, B for 15 times, C for 3 times
+         [0, 0, 0, 0, 0],  # when input was C, prediction was A for 5 times, C for 24 times, D for 1 time
+         [0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0]]
+data_np = np.asarray(x_2dim, np.float32)
+
+
+capa = [200,200,200,200,200]
+
+r = 0
+while (r < xy.shape[0]) :
+# for r in range(xy.shape[0]):  # r = random.randint(0, xy2.shape[0] - 1)
+    l = sess.run(tf.argmax(y_data[r:r + 1], 1))
+    if capa[l[0]] <= 0 :
+        r += (xy.shape[0] / 5)
+        continue
+    capa[l[0]] -= 1
+
+    # p_tf = tf.convert_to_tensor(x_2dim2, np.float32)
+    p = sess.run(
+        tf.argmax(hypothesis, 1), feed_dict={X: data_np[r:r + 1], keep_prob: 0.7})
+    array[l[0]][p[0]] += 1
+    print(l, p)
+    r += 1
+
+for i in range(5):
+    for j in range(5):
+        print(array[i][j], end=',')
+    print("")
 
 # # Get one and predict
 # r = random.randint(0, mnist.test.num_examples - 1)

@@ -6,7 +6,7 @@ import string
 import time
 
 
-OUT_FILE='out/test0422.csv'
+OUT_FILE='out/test0611_20s.csv'
 
 
 def integer_csv(rows, schema, delimiter):
@@ -25,81 +25,81 @@ def integer_csv(rows, schema, delimiter):
             generators.append(lambda: random.random())
         #clock 0
         elif column == 'anger0':
-            generators.append(lambda: random.uniform(0.009886557,0.20480545))
+            generators.append(lambda: random.uniform(0.009886557,0.10480545))
         elif column == 'disgust0':
-            generators.append(lambda: random.uniform(0.00007, 0.014853356))
+            generators.append(lambda: random.uniform(0.00027, 0.012853356))
         elif column == 'happy0':
-            generators.append(lambda: random.uniform(0.06398171, 0.6509571))
+            generators.append(lambda: random.uniform(0.04395171, 0.5509571))
         elif column == 'surprise0':
-            generators.append(lambda: random.uniform(0.018697215, 0.390521))
+            generators.append(lambda: random.uniform(0.028697215, 0.590521))
         elif column == 'sad0':
-            generators.append(lambda: random.uniform(0.014285376, 0.17149168))
+            generators.append(lambda: random.uniform(0.024285376, 0.225168))
         elif column == 'neutral0':
-            generators.append(lambda: random.uniform(0.22317481, 0.82267475))
+            generators.append(lambda: random.uniform(0.32317481, 0.92267475))
         elif column == 'result0':
             generators.append(lambda: '0') #random.choice([1, 0])
 
         #gallery 1
         elif column == 'anger1':
-            generators.append(lambda: random.uniform(0.029739598, 0.59183836))
+            generators.append(lambda: random.uniform(0.049739598, 0.49183836))
         elif column == 'disgust1':
-            generators.append(lambda: random.uniform(0.003188006, 0.051654585))
+            generators.append(lambda: random.uniform(0.002188006, 0.031654585))
         elif column == 'happy1':
-            generators.append(lambda: random.uniform(0.042635635, 0.2546624))
+            generators.append(lambda: random.uniform(0.052635635, 0.2746624))
         elif column == 'surprise1':
-            generators.append(lambda: random.uniform(0.014592985, 0.10824544 ))
+            generators.append(lambda: random.uniform(0.114592985, 0.20824544 ))
         elif column == 'sad1':
-            generators.append(lambda: random.uniform(0.01849962, 0.19864453))
+            generators.append(lambda: random.uniform(0.11849962, 0.29864453))
         elif column == 'neutral1':
-            generators.append(lambda: random.uniform(0.23245348, 0.67217124))
+            generators.append(lambda: random.uniform(0.33245348, 0.87217124))
         elif column == 'result1':
             generators.append(lambda: '1') #random.choice([1, 0])
 
         #sns 2
         elif column == 'anger2':
-            generators.append(lambda: random.uniform(0.003180297, 0.18568122))
+            generators.append(lambda: random.uniform(0.023180297, 0.19568122))
         elif column == 'disgust2':
-            generators.append(lambda: random.uniform(0.000240074, 0.00642167))
+            generators.append(lambda: random.uniform(0.001240074, 0.00742167))
         elif column == 'happy2':
-            generators.append(lambda: random.uniform(0.11639011, 0.9253144))
+            generators.append(lambda: random.uniform(0.01639011, 0.8253144))
         elif column == 'surprise2':
-            generators.append(lambda: random.uniform(0.009221391, 0.49379063))
+            generators.append(lambda: random.uniform(0.019221391, 0.48379063))
         elif column == 'sad2':
-            generators.append(lambda: random.uniform(0.001832818, 0.061653424))
+            generators.append(lambda: random.uniform(0.011832818, 0.041653424))
         elif column == 'neutral2':
-            generators.append(lambda: random.uniform(0.044488143, 0.3353962))
+            generators.append(lambda: random.uniform(0.034488143, 0.3453962))
         elif column == 'result2':
             generators.append(lambda: '2') #random.choice([1, 0])
 
         #game 3
         elif column == 'anger3':
-            generators.append(lambda: random.uniform(0.003903895, 0.20120052))
+            generators.append(lambda: random.uniform(0.004903895, 0.20140052))
         elif column == 'disgust3':
-            generators.append(lambda: random.uniform(0.000008, 0.02355388))
+            generators.append(lambda: random.uniform(0.010008, 0.03355388))
         elif column == 'happy3':
-            generators.append(lambda: random.uniform(0.013327818, 0.29578075))
+            generators.append(lambda: random.uniform(0.033327818, 0.31578075))
         elif column == 'surprise3':
-            generators.append(lambda: random.uniform(0.011825203, 0.42018622))
+            generators.append(lambda: random.uniform(0.021825203, 0.412018622))
         elif column == 'sad3':
-            generators.append(lambda: random.uniform(0.022996562, 0.8208493))
+            generators.append(lambda: random.uniform(0.032996562, 0.8508493))
         elif column == 'neutral3':
-            generators.append(lambda: random.uniform(0.1424127, 0.8091867))
+            generators.append(lambda: random.uniform(0.1454127, 0.806867))
         elif column == 'result3':
             generators.append(lambda: '3') #random.choice([1, 0])
 
         #official 4
         elif column == 'anger4':
-            generators.append(lambda: random.uniform(0.008649088, 0.55435634))
+            generators.append(lambda: random.uniform(0.078649088, 0.59435634))
         elif column == 'disgust4':
-            generators.append(lambda: random.uniform(0.020066181, 0.26661786))
+            generators.append(lambda: random.uniform(0.120066181, 0.26661786))
         elif column == 'happy4':
-            generators.append(lambda: random.uniform(00.039123125, 0.33754954))
+            generators.append(lambda: random.uniform(0.139123125, 0.43754954))
         elif column == 'surprise4':
-            generators.append(lambda: random.uniform(0.003154741, 0.030702827))
+            generators.append(lambda: random.uniform(0.103154741, 0.130702827))
         elif column == 'sad4':
-            generators.append(lambda: random.uniform(00.00619683, 0.120209165))
+            generators.append(lambda: random.uniform(0.05619683, 0.150209165))
         elif column == 'neutral4':
-            generators.append(lambda: random.uniform(00.05310515, 0.8890979))
+            generators.append(lambda: random.uniform(0.03310515, 0.8590979))
 
         elif column == 'result4':
             generators.append(lambda: '4') #random.choice([1, 0])

@@ -1,6 +1,6 @@
 # Lab 7 Learning rate and Evaluation
 from __future__ import print_function
-
+from sklearn.metrics import confusion_matrix
 import tensorflow as tf
 import random
 import numpy as np
@@ -48,7 +48,7 @@ y_data2 = np.zeros((xy2.shape[0], 5))
 y_data2[np.arange(xy2.shape[0]), y_raw] = 1
 # parameters
 learning_rate = 0.01
-training_epochs = 10
+training_epochs = 100
 num_examples = xy.shape[0]
 batch_size = 100
 
@@ -152,12 +152,17 @@ array = [[0, 0, 0, 0, 0],  # when input was A, prediction was A for 9 times, B f
          [0, 0, 0, 0, 0],
          [0, 0, 0, 0, 0]]
 
-for r in range(xy2.shape[0]):    # r = random.randint(0, xy2.shape[0] - 1)
+
+
+for r in range(100):    # r 0= random.randint(0, xy2.shape[0] - 1)
     l = sess.run(tf.argmax(y_data2[r:r+1], 1))
     p = sess.run(
         tf.argmax(hypothesis, 1), feed_dict={X: x_data2[r:r + 1]})
+
     array[l[0]][p[0]]+=1
-    print(l, p)
+    # print(l, p)
+
+# print results
 
 for i in range(5):
     for j in range(5):
